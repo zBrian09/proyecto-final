@@ -1,25 +1,29 @@
-// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getFirestore, collection, addDoc, getDocs,
-  doc, deleteDoc, updateDoc
+  doc, updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Configuración Firebase
+// Tu configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBZEVISZuRfn1iC3be5b7xTMQiCZubXyTU",
-  authDo
-};
+    apiKey: "AIzaSyAwfs_7ARgYSHAI2CtgsB5oe5RfL0lItNo",
+    authDomain: "usuarios-f1c9f.firebaseapp.com",
+    projectId: "usuarios-f1c9f",
+    storageBucket: "usuarios-f1c9f.firebasestorage.app",
+    messagingSenderId: "1030537302528",
+    appId: "1:1030537302528:web:87322399091df7527efee5",
+    measurementId: "G-MFBDK22VS7"
+  };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const alumnosRef = collection(db, "alumnos");
 
 let modoEdicion = false;
-let idActual = "";
+let idAlumnoActual = "";
 
-// Guardar o actualizar alumno
 const form = document.getElementById("alumnoForm");
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -35,10 +39,10 @@ form.addEventListener("submit", async (e) => {
   };
 
   if (modoEdicion) {
-    const alumnoDoc = doc(db, "alumnos", idActual);
-    await updateDoc(alumnoDoc, datos);
+    const ref = doc(db, "alumnos", idAlumnoActual);
+    await updateDoc(ref, datos);
     modoEdicion = false;
-    idActual = "";
+    idAlumnoActual = "";
     form.querySelector("button").textContent = "Guardar";
   } else {
     await addDoc(alumnosRef, datos);
@@ -48,13 +52,13 @@ form.addEventListener("submit", async (e) => {
   mostrarAlumnos();
 });
 
-// Mostrar alumnos
+// Mostrar todos los alumnos
 async function mostrarAlumnos() {
   const contenedor = document.getElementById("listaAlumnos");
   contenedor.innerHTML = "";
   const snapshot = await getDocs(alumnosRef);
 
-  snapshot.forEach((docu) => {
+  snapshot.forEach(docu => {
     const data = docu.data();
     const div = document.createElement("div");
     div.className = "card";
@@ -65,30 +69,48 @@ async function mostrarAlumnos() {
       <p><strong>Materias:</strong> ${data.materias.join(", ")}</p>
       <p><strong>Email:</strong> ${data.contacto.email}</p>
       <p><strong>Teléfono:</strong> ${data.contacto.telefono}</p>
-      <button onclick="editarAlumno('${docu.id}', ${JSON.stringify(data).replace(/"/g, '&quot;')})">Editar</button>
-      <button onclick="eliminarAlumno('${docu.id}')">Eliminar</button>
+      <button onclick='editarAlumno("${docu.id}", ${JSON.stringify(data).replace(/"/g, '&quot;')})'>Editar</button>
     `;
     contenedor.appendChild(div);
   });
 }
 
-// Eliminar
-window.eliminarAlumno = async (id) => {
-  await deleteDoc(doc(db, "alumnos", id));
-  mostrarAlumnos();
-};
-
-// Editar
-window.editarAlumno = (id, datos) => {
-  form.nombre.value = datos.nombre;
-  form.edad.value = datos.edad;
-  form.carrera.value = datos.carrera;
-  form.materias.value = datos.materias.join(", ");
-  form.email.value = datos.contacto.email;
-  form.telefono.value = datos.contacto.telefono;
-  idActual = id;
+window.editarAlumno = (id, data) => {
+  form.nombre.value = data.nombre;
+  form.edad.value = data.edad;
+  form.carrera.value = data.carrera;
+  form.materias.value = data.materias.join(", ");
+  form.email.value = data.contacto.email;
+  form.telefono.value = data.contacto.telefono;
+  idAlumnoActual = id;
   modoEdicion = true;
   form.querySelector("button").textContent = "Actualizar";
+};
+
+// Buscar alumno por nombre
+window.buscarAlumno = async () => {
+  const nombreBuscar = document.getElementById("buscar").value.trim().toLowerCase();
+  const snapshot = await getDocs(alumnosRef);
+  const contenedor = document.getElementById("listaAlumnos");
+  contenedor.innerHTML = "";
+
+  snapshot.forEach(docu => {
+    const data = docu.data();
+    if (data.nombre.toLowerCase().includes(nombreBuscar)) {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <h3>${data.nombre}</h3>
+        <p><strong>Edad:</strong> ${data.edad}</p>
+        <p><strong>Carrera:</strong> ${data.carrera}</p>
+        <p><strong>Materias:</strong> ${data.materias.join(", ")}</p>
+        <p><strong>Email:</strong> ${data.contacto.email}</p>
+        <p><strong>Teléfono:</strong> ${data.contacto.telefono}</p>
+        <button onclick='editarAlumno("${docu.id}", ${JSON.stringify(data).replace(/"/g, '&quot;')})'>Editar</button>
+      `;
+      contenedor.appendChild(div);
+    }
+  });
 };
 
 mostrarAlumnos();
