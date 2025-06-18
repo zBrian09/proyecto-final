@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Alumnos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>CRUD de Alumnos (Firestore)</h1>
+
+  <form id="alumnoForm">
+    <input type="text" name="nombre" id="nombre" placeholder="Nombre" required>
+    <input type="number" name="edad" id="edad" placeholder="Edad" required>
+    <input type="text" name="carrera" id="carrera" placeholder="Carrera" required>
+    <input type="text" name="materias" id="materias" placeholder="Materias (coma separadas)" required>
+    <input type="email" name="email" id="email" placeholder="Email de contacto" required>
+    <input type="text" name="telefono" id="telefono" placeholder="Teléfono de contacto" required>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <h2>Lista de Alumnos</h2>
+  <div id="listaAlumnos"></div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+
