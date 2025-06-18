@@ -2,21 +2,25 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Gestión de Alumnos</title>
+  <title>Alumnos Firebase</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>CRUD de Alumnos (Firestore)</h1>
+  <h1>Registro de Alumnos</h1>
 
   <form id="alumnoForm">
-    <input type="text" name="nombre" id="nombre" placeholder="Nombre" required>
-    <input type="number" name="edad" id="edad" placeholder="Edad" required>
-    <input type="text" name="carrera" id="carrera" placeholder="Carrera" required>
-    <input type="text" name="materias" id="materias" placeholder="Materias (coma separadas)" required>
-    <input type="email" name="email" id="email" placeholder="Email de contacto" required>
-    <input type="text" name="telefono" id="telefono" placeholder="Teléfono de contacto" required>
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="number" id="edad" placeholder="Edad" required>
+    <input type="text" id="carrera" placeholder="Carrera" required>
+    <input type="text" id="materias" placeholder="Materias (coma separadas)" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="telefono" placeholder="Teléfono" required>
     <button type="submit">Guardar</button>
   </form>
+
+  <input type="text" id="buscar" placeholder="Buscar por nombre...">
+  <button onclick="buscarAlumno()">Buscar</button>
+  <button onclick="mostrarAlumnos()">Ver todos</button>
 
   <h2>Lista de Alumnos</h2>
   <div id="listaAlumnos"></div>
@@ -24,4 +28,3 @@
   <script type="module" src="script.js"></script>
 </body>
 </html>
-
